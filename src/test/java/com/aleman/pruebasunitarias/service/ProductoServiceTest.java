@@ -39,4 +39,23 @@ class ProductoServiceTest {
         assertThat(resultado.get(0).getNombre()).isEqualTo("Laptop");
         verify(productoRepository, times(1)).findAll();
     }
+
+    @Test
+    @DisplayName("create guarda un nuevo producto y devuelve el objeto persistido")
+    void create_debeGuardarProductoNuevo() {
+        // Arrange
+        Producto nuevo = new Producto(null, "Teclado", 800.0);
+        Producto guardado = new Producto(3L, "Teclado", 800.0);
+        when(productoRepository.save(any(Producto.class))).thenReturn(guardado);
+
+        // Act
+        Producto resultado = productoService.create(nuevo);
+
+        // Assert
+        assertThat(resultado).isNotNull();
+        assertThat(resultado.getId()).isEqualTo(3L);
+        assertThat(resultado.getNombre()).isEqualTo("Teclado");
+        assertThat(resultado.getPrecio()).isEqualTo(800.0);
+        verify(productoRepository, times(1)).save(nuevo);
+    }
 }
